@@ -1,7 +1,3 @@
-//gameboard
-//players
-//cells
-//game controller
 
 
 //factory function for Cell objects
@@ -268,14 +264,14 @@ const displayController = (function (){
 
                 switch (cell.getMark()) {
                     case 1:
-                        mark.src = "/logos/alpha-x.svg";
+                        mark.src = "./logos/alpha-x.svg";
                         mark.dataset.column = colIndex + 1;
                         mark.dataset.row = rowIndex + 1;
                         mark.addEventListener("click", playerAction);
                         break;
 
                     case 2:
-                        mark.src = "/logos/circle-outline.svg";
+                        mark.src = "./logos/circle-outline.svg";
                         mark.dataset.column = colIndex + 1;
                         mark.dataset.row = rowIndex + 1;
                         mark.addEventListener("click", playerAction);

@@ -3,8 +3,8 @@
 
 @font-face {
     font-family: 'mouldy_cheeseregular';
-    src: url('/fonts/mouldycheeseregular-wymwg-webfont.woff2') format('woff2'),
-         url('/fonts/mouldycheeseregular-wymwg-webfont.woff') format('woff');
+    src: url('./fonts/mouldycheeseregular-wymwg-webfont.woff2') format('woff2'),
+         url('./fonts/mouldycheeseregular-wymwg-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
