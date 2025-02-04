@@ -156,7 +156,6 @@ const gameController = (function (
         printNewRound();
     }
 
-
     const changePlayerName = (playerNumber, newName) => {
         if(playerNumber == 1 || playerNumber == 2){
             players[playerNumber-1].setName(newName);
@@ -166,7 +165,6 @@ const gameController = (function (
         }
     }
 
-
     // Main game logic here
     //x = row, y = column
     const playRound = (x, y) => {
@@ -174,6 +172,7 @@ const gameController = (function (
             console.log("Invalid Choice! Coordinates must be 1, 2, or 3.");
             return;
         } else if (board[x-1][y-1].getMark() != 0){
+
             console.log("Invalid Choice! Cell is already occupied.");
             return;
         }
@@ -186,7 +185,6 @@ const gameController = (function (
 
         // Create object to check win condition
         const winCondition = createWinCon(x, y); 
-
 
         // Checking if game is ended
         if(winCondition.checkWin()){
@@ -213,6 +211,7 @@ const gameController = (function (
 const displayController = (function (){
     const params = new URLSearchParams(window.location.search);
 
+    // Get all needed DOM elements
     const boardDiv = document.querySelector("#game-board");
     const playerOneName = document.querySelector("#player-one-name");
     const playerTwoName = document.querySelector("#player-two-name");
@@ -224,7 +223,9 @@ const displayController = (function (){
     const endMsgP = document.querySelector("#end-msg");
     const endDialog = document.querySelector("#end-dialog");
     const endRestartBtn = document.querySelector("#end-restart-btn");
+    const activePlayerDiv = document.querySelector("#active-player");
 
+    // Set player names
     gameController.changePlayerName(1,params.get("player-one"));
     gameController.changePlayerName(2,params.get("player-two"))
     playerOneName.textContent = params.get("player-one");
@@ -248,33 +249,43 @@ const displayController = (function (){
         updateScreen();
     });
 
-    
+    // Render Screen
     const updateScreen = () => {
         // clear the board
         boardDiv.innerHTML = "";
         board = gameController.getBoard();
 
+        activePlayerDiv.textContent = gameController.getActivePlayer().getName();
         roundDisplaySpan.textContent = gameController.getRoundNum();
 
         board.forEach((row, rowIndex) => 
             row.forEach((cell, colIndex) => {
-                const newCell = document.createElement("button");
+                const newCell = document.createElement("div");
+                const mark = document.createElement("img");
+                
+                newCell.appendChild(mark);
+                newCell.classList.toggle("cell");
 
-                let mark = ""
                 switch (cell.getMark()) {
                     case 1:
-                        mark = "X";
+                        mark.src = "/logos/alpha-x.svg";
+                        mark.dataset.column = colIndex + 1;
+                        mark.dataset.row = rowIndex + 1;
+                        mark.addEventListener("click", playerAction);
                         break;
+
                     case 2:
-                        mark = "O";
+                        mark.src = "/logos/circle-outline.svg";
+                        mark.dataset.column = colIndex + 1;
+                        mark.dataset.row = rowIndex + 1;
+                        mark.addEventListener("click", playerAction);
                         break;
-                }
-                newCell.textContent = mark;
-                newCell.dataset.column = colIndex + 1;
-                newCell.dataset.row = rowIndex + 1;
-                newCell.classList.toggle("cell");
-                
-                newCell.addEventListener("click", playerAction);
+
+                    default:
+                        newCell.dataset.column = colIndex + 1;
+                        newCell.dataset.row = rowIndex + 1;
+                        newCell.addEventListener("click", playerAction);
+                }   
                 boardDiv.appendChild(newCell);
             })
         );
@@ -298,7 +309,6 @@ const displayController = (function (){
         }
         updateScreen();
     }
-
 
     updateScreen();
 })()

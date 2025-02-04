@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="start.js" defer></script>
+    <link rel="stylesheet" href="start.css">
     <title>Tic Tac Toe</title>
 </head>
 <body>
     <div class="container">
-        <div class="names">
-            <h1 id="player-one-name"></h1>
-            <h1 id="player-two-name"></h1>
+        
+        <img src="/logos/tic-tac-toe-icon.svg" alt="">
+        <div class="menu">
+            <button id="start-game">Start Game</button>
         </div>
-        <div class="round-number">Round: <span id="round-number"></span></div>
-        <div class="game-board" id="game-board"></div>
-        <div class="actions">
-            <button class="restart-btn" id="restart-btn">Restart Game</button>
-        </div>
-        <dialog class="restart-dialog" id="restart-dialog">
-            <p>Are you sure?</p>
-            <div class="actions">
-                <button id="confirm-btn">confirm</button>
-                <button value="cancel" id="cancel-btn">cancel</button>
-            </div>
-        </dialog>
-        <dialog class="end-dialog" id="end-dialog">
-            <p class="end-msg" id="end-msg"></p>
-            <div class="actions">
-                <button id="end-restart-btn">Restart</button>
-            </div>
+        <dialog id="name-dialog">
+            <form action="/game.html" id="name-form" method="get">
+                <h1>Insert Player Names</h1>
+                <section class="player-names">
+                    <p>
+                        <label for="player-one">Player One: </label>
+                        <input type="text" id="player-one" name="player-one" data-playerID=1 required>
+                    </p>
+                    <p>
+                        <label for="player-two">Player Two: </label>
+                        <input type="text" id="player-two" name="player-two" data-playerID=2 required>
+                    </p>
+                </section>
+                <section class="actions">
+                    <button id="confirm-btn">Confirm</button>
+                    <button formmethod="dialog" value="cancel" formnovalidate>Cancel</button>
+                </section>
+            </form>
         </dialog>
     </div>
 </body>

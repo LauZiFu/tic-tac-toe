@@ -1,7 +1,25 @@
 @import 'normalize/modern-normalize.css';
 
+
+@font-face {
+    font-family: 'mouldy_cheeseregular';
+    src: url('/fonts/mouldycheeseregular-wymwg-webfont.woff2') format('woff2'),
+         url('/fonts/mouldycheeseregular-wymwg-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 :root {
     line-height: 1.5;
+
+    --bronze-clr: rgb(219, 149, 95);
+    --border-clr: rgb(95, 56, 26);
+    --cell-clr: rgb(184, 109, 53);
+    --border-radius: 8px;
+    --small-font: 1rem;
+    --title-font-size: 3rem;
+    --medium-font-size: 2rem;
 }
 
 h1, h2, h3, h4, h5, figure, p, ol, ul {
@@ -51,23 +69,129 @@ button {
 
 /*styling*/
 
+
 body {
     height: 100vh;
     width: 100vw;
-    border: 1px solid red;
+    background-color: var(--bronze-clr);
+    font-family: system-ui, "mouldy_cheeseregular", "Segoe UI", Roboto, Helvetica, Arial, 
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 600;
+}
+
+
+dialog h1,
+form h1,
+h1,
+button {
+    font-family: "mouldy_cheeseregular";
+    font-weight: 500;
+    letter-spacing: 0.1em;
+}
+
+button,
+.cell {
+    background-color: var(--cell-clr);
+    border-radius: var(--border-radius);
+}
+
+button {
+    font-size: var(--small-font);
+    padding: 1em 2em;
+    font-weight: 700;
+    box-shadow: 2px 2px 2px;
+}
+
+button:hover,
+.cell:hover {
+    cursor: pointer;
+    filter: brightness(90%);
+}
+
+button:focus {
+    outline: none;
+}
+
+dialog {
+    padding: 1em;
+    gap: 1rem;
+    width: 20em;
+    border-radius: var(--border-radius);
+    border: 3px solid var(--border-clr);
+    background-color: var(--bronze-clr);
+    box-shadow: 2px 2px 2px;
+}
+
+dialog h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+dialog .actions {
+    display: flex;
+    justify-content: space-between;
 }
 
 .container {
     height: 100%;
+    width: 1216px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 2rem;
 }
+
+
+.header {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 20% 1fr 20%;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    padding: 1rem;
+    font-size: 4rem;
+
+}
+
+.header > img {
+    width: 1.5em;
+}
+
+.round-number {
+    grid-row: 1/3;
+    grid-column: 2/3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.round-number > h1 {
+    font-size: var(--title-font-size);
+}
+
+.round-number > h1 + div {
+    font-size: 1.5rem;
+}
+
+#player-one-name {
+    grid-row: 1/2;
+    grid-column: 1/2;
+}
+
+#player-two-name {
+    grid-row: 1/2;
+    grid-column: 3/4;
+}
+
 
 .game-board {
     width: 37.5rem;
     height: 37.5rem;
-    border: 1px solid red;
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -75,9 +199,12 @@ body {
     gap: 1rem;
 }
 
-button:hover,
-.cell:hover {
-    cursor: pointer;
-    filter: brightness(90%);
+.cell {
+    border: 5px inset var(--border-clr);
+}
+
+.cell img {
+    width: 100%;
+    height: auto;
 }
 

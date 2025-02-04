@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="player-one-name"></h1>
+            <img src="/logos/alpha-x.svg" alt="">
+
+            <div class="round-number">
+                <h1 class="active-player"><span id="active-player"></span>'s Turn!</h1>
+                <div>Round: <span id="round-number"></span></div>
+            </div>
+
+            <h1 id="player-two-name"></h1>
+            <img src="/logos/circle-outline.svg" alt="">
+        </div>
+
+        <div class="game-board" id="game-board"></div>
+        <div class="actions">
+            <button class="restart-btn" id="restart-btn">Restart Game</button>
+        </div>
+        <dialog class="restart-dialog" id="restart-dialog">
+            <h1>Are you sure?</h1>
+            <div class="actions">
+                <button id="confirm-btn">confirm</button>
+                <button value="cancel" id="cancel-btn">cancel</button>
+            </div>
+        </dialog>
+        <dialog class="end-dialog" id="end-dialog">
+            <h1 class="end-msg" id="end-msg"></h1>
+            <div class="actions">
+                <button id="end-restart-btn">Restart</button>
+            </div>
+
+        </dialog>
+    </div>
+</body>
+</html>
