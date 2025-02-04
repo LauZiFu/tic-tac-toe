@@ -139,7 +139,6 @@ dialog {
 #name-form input[type="text"] {
     background-color: var(--cell-clr);
     padding: 1em;
-    font-weight: 700;
 }
 
 #name-form input[type="text"]:focus {
