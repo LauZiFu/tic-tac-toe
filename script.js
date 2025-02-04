@@ -23,16 +23,18 @@ function createCell (){
 
 
 function createPlayer(name, number){
-    
-    const getName = () => name;
+    let playerName = name;
+
+    const setName = (newName) => playerName = newName;
+    const getName = () => playerName;
     const getNumber = () => number;
 
-    return {getName, getNumber};
+    return {getName, setName, getNumber};
 }
 
 
-//models state of the board
-//each square holds a Cell object
+// Models state of the board
+// Each square holds a Cell object
 const gameBoard = (function(){
     const board = [];
     const dimension = 3
@@ -45,12 +47,8 @@ const gameBoard = (function(){
     }
 
     const getBoard = () => board;
-    
-    const drawMark = (playerNum, row, column) => {
-        if(board[row][column].getMark() === 0){
-            board[row][column].addMark(playerNum);
-        }
-    };
+    const drawMark = (playerNum, row, column) => board[row][column].addMark(playerNum);
+    const resetBoard = () => board.map((row) => row.map((cell) => cell.addMark(0)));
 
     const printBoard = () => {
         const boardWithCellValues = board.map((row) => 
@@ -71,7 +69,7 @@ const gameBoard = (function(){
         console.log(boardWithCellValues);
     };
 
-    return {getBoard, drawMark, printBoard};
+    return {getBoard, drawMark, resetBoard, printBoard};
 })();
 
 
@@ -82,16 +80,25 @@ const gameBoard = (function(){
 const gameController = (function (
     playerOneName = "Player One",
     playerTwoName = "Player Two"
-){
+){  
+    const PLAYERONENUM = 1;
+    const PLAYERTWONUM = 2;
+
     const board = gameBoard.getBoard();
-    const players = [createPlayer(playerOneName, 1), createPlayer(playerTwoName, 2)];
+    const players = [createPlayer(playerOneName, PLAYERONENUM), 
+        createPlayer(playerTwoName, PLAYERTWONUM)];
     let activePlayer = players[0];
-    let roundNum = 0;
+    let roundNum = 1; // Keep track of round number
 
     const getActivePlayer = () => activePlayer;
-    const switchActivePlayer = () => activePlayer = players[roundNum % 2];
+
+    // Every even round is player one, odd player two
+    const switchActivePlayer = () => activePlayer = players[(roundNum - 1) % 2];
     const incrementRound = () => roundNum++;
 
+    const getRoundNum = () => roundNum;
+
+    // For console rendering
     const printNewRound = () => {
         console.log(`Round: ${roundNum}`);
         gameBoard.printBoard();
@@ -99,7 +106,7 @@ const gameController = (function (
     };
 
     // Auxillary factory function for checking player win condition
-    //x = row, y = column
+    // x = row, y = column
     const createWinCon = (x, y) => {
         const checkRowWin = () => {
             return board[x-1].filter((cell) => 
@@ -128,13 +135,37 @@ const gameController = (function (
         };
 
         const checkDraw = () => {
-            return roundNum == Math.pow(board.length, 2)-1;
+            return roundNum == Math.pow(board.length, 2)+1;
         };
 
+        // Check win condition for all cases
+        // Row, Column, or Diagonal Win
         const checkWin = () => checkRowWin() || checkColWin() || checkDiagWin();
 
         return {checkDraw, checkWin};
     };
+
+    // Restarts game. 
+    // Resets game state to 1st round
+    const restartGame = () => {
+        activePlayer = players[0];
+        roundNum = 1;
+        gameBoard.resetBoard();
+
+        console.log("Restarting Game...");
+        printNewRound();
+    }
+
+
+    const changePlayerName = (playerNumber, newName) => {
+        if(playerNumber == 1 || playerNumber == 2){
+            players[playerNumber-1].setName(newName);
+            console.log("Changing player name...");
+        } else {
+            console.log("Invalid player number! Must be either 1 or 2.");
+        }
+    }
+
 
     // Main game logic here
     //x = row, y = column
@@ -147,37 +178,128 @@ const gameController = (function (
             return;
         }
 
+        // update round number at start of round
+        incrementRound();
+
         console.log(`Drawing ${activePlayer.getName()}'s mark on \nRow: ${x}\nColumn: ${y}`);
         gameBoard.drawMark(activePlayer.getNumber(), x-1, y-1);
 
         // Create object to check win condition
         const winCondition = createWinCon(x, y); 
 
+
         // Checking if game is ended
         if(winCondition.checkWin()){
             console.log(`${activePlayer.getName()} Wins!`);
-            return;
+            return "WIN";
         } else if (winCondition.checkDraw()){
             console.log("Game End! Draw!");
-            return;
-        }
-        
+            return "DRAW";
+        } else {
         // Next round logic
-        incrementRound();
-        switchActivePlayer();
-        printNewRound();
+            switchActivePlayer();
+            printNewRound();
+        }
     }
 
     // Initial Round Display
     printNewRound();
 
-    return {getActivePlayer, playRound};
+    return {getActivePlayer, playRound, restartGame, 
+        changePlayerName, getRoundNum, getBoard: gameBoard.getBoard};
 })();
 
-/*
-Win Con:
-1. Column 1 or 3, Row 1 or 3
-2. Column 1 or 3, Row 2
-3. Column 2, row 1 or 3
-4. Column 2, row 2
-*/
+
+const displayController = (function (){
+    const params = new URLSearchParams(window.location.search);
+
+    const boardDiv = document.querySelector("#game-board");
+    const playerOneName = document.querySelector("#player-one-name");
+    const playerTwoName = document.querySelector("#player-two-name");
+    const roundDisplaySpan = document.querySelector("#round-number");
+    const restartBtn = document.querySelector("#restart-btn");
+    const restartDialog = document.querySelector("#restart-dialog");
+    const confirmBtn = document.querySelector("#confirm-btn");
+    const cancelBtn = document.querySelector("#cancel-btn");
+    const endMsgP = document.querySelector("#end-msg");
+    const endDialog = document.querySelector("#end-dialog");
+    const endRestartBtn = document.querySelector("#end-restart-btn");
+
+    gameController.changePlayerName(1,params.get("player-one"));
+    gameController.changePlayerName(2,params.get("player-two"))
+    playerOneName.textContent = params.get("player-one");
+    playerTwoName.textContent = params.get("player-two");
+
+    restartBtn.addEventListener("click", ()=>{
+        restartDialog.showModal();
+    });
+
+    confirmBtn.addEventListener("click", ()=>{
+        gameController.restartGame();
+        restartDialog.close();
+        updateScreen();
+    });
+
+    cancelBtn.addEventListener("click", ()=> restartDialog.close());
+
+    endRestartBtn.addEventListener("click", ()=> {
+        gameController.restartGame();
+        endDialog.close()
+        updateScreen();
+    });
+
+    
+    const updateScreen = () => {
+        // clear the board
+        boardDiv.innerHTML = "";
+        board = gameController.getBoard();
+
+        roundDisplaySpan.textContent = gameController.getRoundNum();
+
+        board.forEach((row, rowIndex) => 
+            row.forEach((cell, colIndex) => {
+                const newCell = document.createElement("button");
+
+                let mark = ""
+                switch (cell.getMark()) {
+                    case 1:
+                        mark = "X";
+                        break;
+                    case 2:
+                        mark = "O";
+                        break;
+                }
+                newCell.textContent = mark;
+                newCell.dataset.column = colIndex + 1;
+                newCell.dataset.row = rowIndex + 1;
+                newCell.classList.toggle("cell");
+                
+                newCell.addEventListener("click", playerAction);
+                boardDiv.appendChild(newCell);
+            })
+        );
+    }
+
+    const displayEndGame = (result) => {
+        if(result === "WIN"){
+            endMsgP.textContent = `${gameController.getActivePlayer().getName()} Wins!`
+        } else if (result === "DRAW"){
+            endMsgP.textContent = `Draw!`
+        }
+
+        endDialog.showModal()
+    }
+
+    const playerAction = (event) => {
+        const result = gameController
+            .playRound(event.target.dataset.row, event.target.dataset.column);
+        if(result){
+            displayEndGame(result);
+        }
+        updateScreen();
+    }
+
+
+    updateScreen();
+})()
+
