@@ -18,6 +18,7 @@
     --border-radius: 8px;
     --small-font: 1rem;
     --title-font-size: 3rem;
+    --main-title-font-size: 7rem;
 }
 
 h1, h2, h3, h4, h5, figure, p, ol, ul {
@@ -63,29 +64,21 @@ button {
 
 * {
     box-sizing: border-box;
+    font-family: "mouldy_cheeseregular";
+    font-weight: 500;
+    letter-spacing: 0.1em;
 }
 
 
 /*
 styling
 */
-
 body {
     height: 100vh;
     width: 100vw;
     background-color: var(--bronze-clr);
     font-family: system-ui, "mouldy_cheeseregular", "Segoe UI", Roboto, Helvetica, Arial, 
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-weight: 700;
-}
-
-dialog h1,
-form h1,
-h1,
-button {
-    font-family: "mouldy_cheeseregular";
-    font-weight: 500;
-    letter-spacing: 0.1em;
 }
 
 
@@ -93,15 +86,22 @@ button {
     height: 100%;
     width: 1216px;
     margin: 0 auto;
+    padding: 20rem 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5rem;
+    gap: 1rem;
+}
+
+.container > h1 {
+    font-size: var(--main-title-font-size);
+    font-style: italic;
+    flex: 1;
 }
 
 .container > img {
-    width: 15rem;
+    width: 10rem;
 }
 
 .menu > button {
@@ -109,19 +109,17 @@ button {
     border: none;
 }
 
-
 dialog,
-button {
+button,
+input[type="text"] {
     box-shadow: 2px 2px 2px;
     border-radius: var(--border-radius);
 }
 
 button {
     background-color: var(--cell-clr);
-    border: 5px solid var(--border-clr);
     font-size: var(--small-font);
     padding: 1em 2em;
-    font-weight: 700;
 }
 
 dialog {
@@ -142,12 +140,12 @@ dialog {
     background-color: var(--cell-clr);
     padding: 1em;
     font-weight: 700;
-    border-radius: var(--border-radius);
 }
 
 #name-form input[type="text"]:focus {
     outline: 1px solid var(--border-clr);
 }
+
 
 .player-names {
     display: flex;
